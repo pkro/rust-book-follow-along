@@ -11,8 +11,6 @@ fn main() {
     // 1..=100 is an inclusive range expression
     let secret_number = rand::thread_rng().gen_range(1..=100); // random number 1-100 (inclusive)
 
-
-
     loop {
         println!("Please input your guess");
         // variables are declared using "let".
