@@ -860,4 +860,105 @@ fn main() {
 }
 ```
 
+## Enums and Pattern matching
 
+### basic enums
+
+```rust
+// basic enum
+enum IpAddrKind {
+    V4, // these are not existing types but enum variants
+    V6, // that can be used as-is
+}
+
+// used as a param / type
+fn route(ip_kind: IpAddrKind) {}
+
+fn main() {
+    // create instances of enum
+    let four = IpAddrKind::V4;
+    route(four);
+    // use directly
+    route(IpAddrKind::V6);
+}
+```
+
+### enums with types and enum methods
+
+```rust
+// enum with types in variants
+// the types of the variants can be anything: tuples, structs etc.
+enum IpAddrKind {
+    V4(u8, u8,u8,u8), // V4 is a tuple of 4 u8s
+    V6(String)
+}
+
+// enums can have methods, too
+impl IpAddrKind {
+    fn show(&self) {
+        // this is how we can access the variant of the current instance
+        match self {
+            IpAddrKind::V4(a, b, c, d) => println!("{}.{}.{}.{}", a, b, c, d), // destructure data
+            IpAddrKind::V6(s) => println!("{}", s),
+        }
+    }
+}
+// used as a param / type
+// note that here route takes ownership, so it vanishes from the calling scope after call
+fn route(ip_kind: IpAddrKind) {}
+
+fn main() {
+    // create instances of enum
+    let four = IpAddrKind::V4(127,0,0,1);
+    route(four);
+    // use directly
+    route(IpAddrKind::V6(String::from("::1")));
+
+    (IpAddrKind::V4(127,0,0,1)).show(); // 127.0.0.1
+}
+```
+
+### The Option Enum and its advantages over Null values
+
+- rust doesn't have a `null` value, but the `Option<T>` enum
+- T = generic type, meaning the `Some` variant can hold any value
+
+Option implementation from the standard library
+```rust
+enum Option<T> {
+    None,
+    Some(T),
+}
+```
+
+_A value that we know can potentially become null must be of `Option<T>` type, no other value can become null(ish)_
+
+**Using Option<T> and handling it with pattern matching or safe methods is a core part of Rust's approach to safety, ensuring that you deal with potential null or absent values explicitly.sing Option<T> and handling it with pattern matching or safe methods is a core part of Rust's approach to safety, ensuring that you deal with potential null or absent values explicitly.**
+
+Using the `Option<T>` enum makes the compiler ensure we always handle the `None` (nullish) arm.
+
+If we want to use the value of `Option<T>`, we must convert it to `T` first.
+
+```rust
+fn main() {
+    let some_number = Some(5); // type is Option<i32>
+    let some_char = Some('e'); // type is Option<char>
+
+    let absent_number: Option<i32> = None; // basically null
+
+    let x: i8 = 5;
+    let y: Option<i8> = Some(5);
+
+    //let i_error= x + y; // error
+
+    // we MUST explicitely handle the possible None value
+    let sum = match y {
+        Some(num) => x + num,  // If y is Some(i8), add it to x
+        None => x,            // If y is None, just use x
+    };
+
+    println!("{sum}"); // 10
+}
+```
+
+### The `match` control flow construct
