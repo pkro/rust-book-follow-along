@@ -1,3 +1,7 @@
+fn five() -> int32 {
+    5
+}
+
 fn main() {
-    println!("Hello, world!");
+    println!("Five is {}", five());
 }
