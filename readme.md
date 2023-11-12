@@ -1,5 +1,8 @@
 # rust book follow along
 
+<!-- START doctoc -->
+<!-- END doctoc -->
+
 ## Installation
 
 https://doc.rust-lang.org/stable/book/ch01-01-installation.html
@@ -154,6 +157,7 @@ The variable name "x" is re-used here. The variable is still immutable as "x = 5
 
 - rust is statically typed, meaning all variable's data types must be known at compile time.
 - rust can usually infer the type from the value; if it can't, it will complain
+- Numeric literals can be explicitly typed using suffixes, like `3u8` for an unsigned 8-bit integer (u8), specifying the exact data type.
 
 #### Scalars: Integers
 
@@ -244,6 +248,7 @@ Code blocks evaluate to the last expression in them. A semicolon changes an expr
 - snake case by convention
 - parameter types must be declared in the function signature
 - return type (if not `()` (unit)) must be declared using `->`
+- Can be declared inside any scope, , but it's generally best practice to define them at the module level (in the global scope of the module).
 - **for the last expression of a function, it's idiomatic in Rust to omit return and the semicolon**
 - return values can (or must?) be declared with an arrow
   - if the last line in a function is an expression, it is used as the return value
@@ -414,6 +419,7 @@ fn main() {
 - again, for primitive types such as &str, all integer types, tuples if they _only_ contain primitive types, rust always does a deep copy
 - types that implement the `Copy` trait are automatically copied, not moved
 - if a type implements a `Copy` trait, it can't implement the `Drop` trait
+- In Rust, the Copy trait is implemented by various simple and primitive types
 
 ```rust
 fn main() {
@@ -866,7 +872,7 @@ fn main() {
 
 ```rust
 // basic enum
-enum IpAddrKind {
+enum IpAddrKind { // CamelCase for enums
     V4, // these are not existing types but enum variants
     V6, // that can be used as-is
 }
@@ -962,3 +968,145 @@ fn main() {
 ```
 
 ### The `match` control flow construct
+
+#### Basics
+
+- `match` is one of the most important constructs in rust
+- `match` ensures all possible values of a variable are covered
+- arms can bind to the values of a variable so we can access its content (e.g. properties of a struct)
+- the patterns are evaluated in the order they are defined, so it might be a good idea to put the 
+
+```rust
+#[derive(Debug)]
+enum UsState {
+    Alabama,
+    Alaska,
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState) // an enum with a value, here it's another enum
+}
+
+fn main() {
+    let a_penny = Coin::Penny;
+    let a_quarter = Coin::Quarter(UsState::Alaska);
+
+    println!("{}", value_in_cents(&a_penny));   // 1
+    println!("{}", value_in_cents(&a_quarter)); // 25 (and prints "Quarter from Alaska")
+
+}
+
+fn value_in_cents(coin: &Coin) -> u8 {
+    match coin {
+        Coin::Penny => 1,    // arms of the match expression
+        Coin::Nickel => 5,   // return 1 if coin is a penny
+        Coin::Dime => 10,
+        Coin::Quarter(state) =>  { // we can use blocks, too
+            println!("Quarter from {:?}", state); // side effect
+            25                          // return 25
+        }
+    }
+}
+```
+
+#### Matching with `Option<T>`
+
+```rust
+fn main() {
+    let five = Some(5);
+    let six = plus_one(five);
+    let none = plus_one(None);
+
+}
+
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    // None and Some(x) are from the standard library 
+    // and are included in the prelude
+    // They return an Option value
+    match x {
+        None => None,               // without this line, there'd be an error as not all cases are covered
+        Some(i) => Some(i+1)    // access the Some value
+    }
+}
+```
+
+#### Catch-all patterns and the `_` placeholder
+
+```rust
+fn main() {
+    let dice_roll = 9;
+    match dice_roll {
+        3 => add_fancy_hat(),
+        7 => remove_fancy_hat(),
+        // all other values ("other", an arbitrary variable name, binds to the value)
+        // other is bound to the actual value
+        other => move_player(other),
+    }
+
+    match dice_roll {
+        3 => add_fancy_hat(),
+        7 => remove_fancy_hat(),
+        // _ matches any value but doesn't bind to the value
+        // used to indicate to the compiler that the value will not be used
+        _ => shrug_at_player(),
+        // if we really don't do anything, we could also return a unit
+        // _ => ()
+        // or
+        // _ => {}
+    }
+
+}
+
+fn add_fancy_hat() {}
+fn remove_fancy_hat() {}
+fn shrug_at_player() {}
+fn move_player(num_spaces: u8) {}
+```
+
+We can use function to modify the match value before evaluation:
+
+```rust
+fn random_number(value: &i32) -> u32 {
+    5
+}
+
+fn main() {
+    let secret_number = 42; // Example value
+
+    match random_number(&secret_number) {
+        4 => println!("Success!"),
+        6 => println!("Failure!"),
+        _ => {} // since rust can't determine random_number, it insists on a catch_all
+    }
+}
+```
+
+#### shorthand `if let`
+
+- use if only one pattern / arm is of interest and the rest can be ignored
+- takes a pattern and an expression separated by an equal sign
+- "syntactic sugar" for `match` to make it more concise in commen if / else cases
+- using if let with `Option` types, particularly with the `Some` variant, is one of the most common use cases for this construct
+- Exhaustiveness Checking: Unlike `match`, which requires handling all possible cases, `if let` focuses on only one pattern, sacrificing the exhaustiveness check for conciseness. This is useful for simpler scenarios but requires caution in complex cases where unhandled variants might lead to logic errors.
+
+```rust
+fn main() {
+    let config_max = Some(3u8); // numeric literal with type prefix
+    // using match
+    match config_max {
+        Some(max) => println!("The maximum is configured to be {}", max),
+        _ => (),
+    }
+
+    // Using if let
+    if let Some(max) = config_max { // this is basically assigning config_max to max
+        println!("The maximum is configured to be {}", max);
+    } else {
+        println!("Max connections are not configured");
+    }
+}
+
+```

@@ -1,19 +1,16 @@
+
 fn main() {
-    let some_number = Some(5); // type is Option<i32>
-    let some_char = Some('e'); // type is Option<char>
+    let config_max = Some(3u8); // numeric literal with type prefix
+    // using match
+    match config_max {
+        Some(max) => println!("The maximum is configured to be {}", max),
+        _ => (),
+    }
 
-    let absent_number: Option<i32> = None; // basically null
-
-    let x: i8 = 5;
-    let y: Option<i8> = Some(5);
-
-    //let i_error= x + y; // error
-
-    // we MUST explicitely handle the possible None value
-    let sum = match y {
-        Some(num) => x + num,  // If y is Some(i8), add it to x
-        None => x,            // If y is None, just use x
-    };
-
-    println!("{sum}"); // 10
+    // Using if let
+    if let Some(max) = config_max { // this is basically assigning config_max to max
+        println!("The maximum is configured to be {}", max);
+    } else {
+        println!("Max connections are not configured");
+    }
 }
