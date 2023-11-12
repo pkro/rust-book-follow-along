@@ -1,7 +1,61 @@
 # rust book follow along
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Installation](#installation)
+- [basics](#basics)
+- [compilation](#compilation)
+- [Cargo (rust package manager)](#cargo-rust-package-manager)
+- [Rust standard library and prelude](#rust-standard-library-and-prelude)
+- [Dependencies / importing libraries](#dependencies--importing-libraries)
+- [Programming a guessing game](#programming-a-guessing-game)
+- [Concepts](#concepts)
+  - [Variable / const declarations](#variable--const-declarations)
+  - [Variable shadowing](#variable-shadowing)
+  - [Data types](#data-types)
+    - [Scalars: Integers](#scalars-integers)
+    - [Scalars: Floating point, boolean, character](#scalars-floating-point-boolean-character)
+  - [Compound types](#compound-types)
+    - [Tuple](#tuple)
+    - [Array](#array)
+  - [Code blocks](#code-blocks)
+  - [Functions](#functions)
+  - [Comments](#comments)
+  - [control flow](#control-flow)
+    - [if / else / else if](#if--else--else-if)
+    - [ternary](#ternary)
+    - [loops (loop, while, for)](#loops-loop-while-for)
+- [Ownership](#ownership)
+  - [Exkurs: stack / heap](#exkurs-stack--heap)
+  - [Ownership rules](#ownership-rules)
+  - [Variable scope](#variable-scope)
+  - [String / complex types / deep vs shallow copy / moving variables](#string--complex-types--deep-vs-shallow-copy--moving-variables)
+  - [Ownership and functions](#ownership-and-functions)
+  - [References and borrowing](#references-and-borrowing)
+    - [Immutable references](#immutable-references)
+    - [Mutable references](#mutable-references)
+    - [Dangling references](#dangling-references)
+  - [Slice type](#slice-type)
+- [Structs](#structs)
+  - [Structs with named fields](#structs-with-named-fields)
+  - [Tuple Structs](#tuple-structs)
+  - [Unit-like structs](#unit-like-structs)
+  - [Display and Debug traits to display struct data](#display-and-debug-traits-to-display-struct-data)
+  - [The `dbg!` macro](#the-dbg-macro)
+  - [Methods and associated functions](#methods-and-associated-functions)
+- [Enums and Pattern matching](#enums-and-pattern-matching)
+  - [basic enums](#basic-enums)
+  - [enums with types and enum methods](#enums-with-types-and-enum-methods)
+  - [The Option Enum and its advantages over Null values](#the-option-enum-and-its-advantages-over-null-values)
+  - [The `match` control flow construct](#the-match-control-flow-construct)
+    - [Basics](#basics-1)
+    - [Matching with `Option<T>`](#matching-with-optiont)
+    - [Catch-all patterns and the `_` placeholder](#catch-all-patterns-and-the-_-placeholder)
+    - [shorthand `if let`](#shorthand-if-let)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
 
