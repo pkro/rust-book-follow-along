@@ -1108,5 +1108,4 @@ fn main() {
         println!("Max connections are not configured");
     }
 }
-
 ```
